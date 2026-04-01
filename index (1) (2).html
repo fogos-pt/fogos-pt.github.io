@@ -1,0 +1,1454 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Risco de Incêndio em Portugal Hoje (Tempo Real)</title>
+<meta name="description" content="Veja o risco de incêndio rural em Portugal hoje em tempo real com dados oficiais do IPMA/ICNF.">
+<link rel="canonical" href="https://fogos-pt.github.io/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<link rel="icon" type="image/x-icon" href="https://res.cloudinary.com/deaee7sf6/image/upload/v1774902131/Polish_20260330_211530162_j9eymv.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="https://res.cloudinary.com/deaee7sf6/image/upload/v1774902131/Polish_20260330_211530162_j9eymv.ico">
+<link rel="apple-touch-icon" sizes="180x180" href="https://res.cloudinary.com/deaee7sf6/image/upload/v1774902131/Polish_20260330_211530162_j9eymv.ico">
+<style>
+  :root {
+    --red: #e63946;
+    --orange: #f4831f;
+    --yellow: #ffd166;
+    --green: #2ec27e;
+    --bg: #0a0a0c;
+    --surface: #111115;
+    --surface2: #1a1a20;
+    --border: #2e2e38;
+    --text: #f5f0e8;
+    --muted: #a8a4b0;
+    --moderado: #f4831f;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'IBM Plex Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  body::before {
+    content: '';
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    height: 320px;
+    background: linear-gradient(to top, rgba(180,40,0,0.10) 0%, transparent 100%);
+    pointer-events: none;
+    z-index: 0;
+    animation: ambglow 5s ease-in-out infinite alternate;
+  }
+  @keyframes ambglow { from{opacity:.4} to{opacity:1} }
+
+  header {
+    position: relative; z-index: 10;
+    border-bottom: 1px solid var(--border);
+    padding: 0 32px;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 60px;
+    background: rgba(13,13,13,0.95);
+    backdrop-filter: blur(12px);
+  }
+  .logo { display:flex; align-items:center; gap:12px; }
+  .logo-tri {
+    width:32px; height:32px;
+    background: var(--red);
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    animation: ptri 2.2s ease-in-out infinite;
+  }
+  @keyframes ptri { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.65;transform:scale(.93)} }
+  .logo-text { font-family:'Bebas Neue',sans-serif; font-size:20px; letter-spacing:2px; }
+  .logo-text span { color:var(--red); }
+  .live { font-family:'IBM Plex Mono',monospace; font-size:10px; color:#9590a0; text-align:right; line-height:1.7; }
+  .dot { display:inline-block; width:6px; height:6px; border-radius:50%; background:var(--red); margin-right:5px; animation:blink 1.2s ease-in-out infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+  /* HERO */
+  .hero {
+    position: relative; z-index: 5;
+    max-width: 1100px; margin: 0 auto;
+    padding: 48px 32px 40px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 48px;
+  }
+  .hero-tag {
+    font-family:'IBM Plex Mono',monospace;
+    font-size:10px; letter-spacing:3px;
+    text-transform:uppercase; color:var(--red);
+    margin-bottom:14px;
+    display:flex; align-items:center; gap:8px;
+  }
+  .hero-tag::before { content:''; display:inline-block; width:20px; height:1px; background:var(--red); }
+  h1 {
+    font-family:'Bebas Neue',sans-serif;
+    font-size:clamp(48px,9vw,88px);
+    line-height:.9; letter-spacing:-1px;
+  }
+  h2 {
+    font-family:'Bebas Neue',sans-serif;
+  }
+  h1 .fire { color:var(--red); }
+  .hero-sub {
+    margin-top:18px;
+    font-size:13px; color:#c8c2d4;
+    font-family:'IBM Plex Sans',sans-serif;
+    line-height:1.75; max-width:340px;
+    font-weight:300;
+  }
+
+.respond {
+    font-size:13px; color:#c8c2d4;
+    font-family:'IBM Plex Sans',sans-serif;
+  }
+    
+  /* BIG GAUGE */
+  .big-gauge-wrap {
+    display:flex; flex-direction:column; align-items:center; gap:4px;
+    flex-shrink: 0;
+  }
+  .big-gauge-wrap svg { width:260px; height:260px; display:block; }
+
+  /* DAYS */
+  .days-section {
+    position:relative; z-index:5;
+    max-width:1100px; margin:0 auto;
+    padding:0 32px 52px;
+  }
+  .section-label {
+    font-family:'IBM Plex Mono',monospace;
+    font-size:10px; letter-spacing:4px;
+    text-transform:uppercase; color:#9590a0;
+    margin-bottom:16px;
+    display:flex; align-items:center; gap:12px;
+  }
+  .section-label::after { content:''; flex:1; height:1px; background:var(--border); }
+
+  .days-grid {
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:2px;
+  }
+  .day-card {
+    background:var(--surface);
+    border:1px solid var(--border);
+    padding:24px 16px 20px;
+    display:flex; flex-direction:column; align-items:center; gap:10px;
+    transition:border-color .2s,background .2s;
+    animation:fup .5s ease both;
+  }
+  .day-card:hover { border-color:var(--moderado); background:var(--surface2); }
+  .day-card:nth-child(1){animation-delay:.05s}
+  .day-card:nth-child(2){animation-delay:.10s}
+  .day-card:nth-child(3){animation-delay:.15s}
+  .day-card:nth-child(4){animation-delay:.20s}
+  @keyframes fup { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:none} }
+
+  .day-name {
+    font-family:'IBM Plex Mono',monospace;
+    font-size:9px; letter-spacing:2px;
+    color:#b0aabb; text-transform:uppercase; text-align:center;
+  }
+  .mini-gauge { width:100%; max-width:120px; }
+  .day-level {
+    font-family:'Bebas Neue',sans-serif;
+    font-size:18px; letter-spacing:2px;
+    color:var(--moderado); text-align:center;
+  }
+  .pill {
+    font-size:8px;
+    font-family:'IBM Plex Mono',monospace;
+    letter-spacing:.5px;
+    padding:3px 8px;
+    border:1px solid var(--border);
+    color:#a8a4b0;
+    text-transform:uppercase;
+    border-radius:2px;
+  }
+  .pill.ok { border-color:rgba(46,194,126,.5); color:#2ec27e; background:rgba(46,194,126,.07); }
+  .pill.no { border-color:rgba(230,57,70,.5); color:#e63946; background:rgba(230,57,70,.07); }
+
+  /* BOTTOM */
+  .bottom {
+    position:relative; z-index:5;
+    max-width:1100px; margin:0 auto;
+    padding:0 32px 80px;
+  }
+  .rules-grid { display:grid; grid-template-columns:1fr 1fr; gap:2px; margin-bottom:48px; }
+  .rule-card { padding:28px 24px; border:1px solid var(--border); background:var(--surface); }
+  .rule-card.no { border-left:3px solid var(--red); }
+  .rule-card.ok { border-left:3px solid var(--green); }
+  .rule-head { font-family:'Bebas Neue',sans-serif; font-size:17px; letter-spacing:2px; margin-bottom:14px; display:flex; align-items:center; gap:8px; }
+  .rule-head.r { color:var(--red); }
+  .rule-head.g { color:var(--green); }
+  .rule-list { list-style:none; display:flex; flex-direction:column; gap:9px; }
+  .rule-list li { font-size:13.5px; color:#c0bcc8; padding-left:14px; position:relative; line-height:1.6; }
+  .rule-list li::before { content:'—'; position:absolute; left:0; color:var(--border); }
+
+  .scale-row { display:flex; gap:2px; margin-bottom:48px; flex-wrap:wrap; }
+  .scale-item { flex:1; min-width:80px; padding:14px 10px; border:1px solid; text-align:center; }
+  .scale-item .sname { font-family:'Bebas Neue',sans-serif; font-size:14px; letter-spacing:1px; display:block; }
+  .scale-item .sdesc { font-size:9px; font-family:'IBM Plex Mono',monospace; color:#9590a0; margin-top:3px; display:block; }
+  .s1 { border-color:rgba(46,194,126,.4); background:rgba(46,194,126,.07); } .s1 .sname { color:#2ec27e; }
+  .s2 { border-color:rgba(255,209,102,.4); background:rgba(255,209,102,.07); } .s2 .sname { color:#ffd166; }
+  .s3 { border-color:rgba(244,131,31,.5); background:rgba(244,131,31,.08); } .s3 .sname { color:#f4831f; }
+  .s4 { border-color:rgba(230,57,70,.5); background:rgba(230,57,70,.08); } .s4 .sname { color:#e63946; }
+  .s5 { border-color:rgba(160,20,20,.7); background:rgba(160,20,20,.14); } .s5 .sname { color:#c0392b; }
+
+  .sos { border:1px solid rgba(230,57,70,.4); background:rgba(230,57,70,.06); padding:28px 32px; display:flex; flex-direction:column; align-items:flex-start; gap:12px; border-radius:2px; }
+  .sos-num { font-family:'Bebas Neue',sans-serif; font-size:48px; color:var(--red); letter-spacing:2px; line-height:1; }
+  .sos-label { font-size:9px; font-family:'IBM Plex Mono',monospace; color:#9590a0; letter-spacing:2px; text-transform:uppercase; margin-top:2px; }
+  .sos-div { width:1px; height:48px; background:var(--border); flex-shrink:0; }
+  .sos-msg { font-size:13.5px; color:#c0bcc8; line-height:1.75; }
+  .sos-msg strong { color:var(--text); }
+
+  footer { position:relative; z-index:5; border-top:1px solid var(--border); padding:24px 32px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; background:var(--surface); }
+  .ft { font-family:'IBM Plex Mono',monospace; font-size:10px; color:#9590a0; line-height:1.7; }
+  .ft a { color:var(--red); text-decoration:none; }
+  .fl { font-family:'Bebas Neue',sans-serif; font-size:13px; letter-spacing:2px; color:#9590a0; }
+
+  /* LOADING OVERLAY */
+  #loading-overlay {
+    position: fixed; inset: 0; z-index: 999;
+    background: #0a0a0c;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 20px;
+    transition: opacity .5s ease;
+  }
+  #loading-overlay.hidden { opacity: 0; pointer-events: none; }
+  .loading-tri {
+    width: 52px; height: 52px;
+    background: var(--red);
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    animation: pulse-load 1s ease-in-out infinite alternate;
+  }
+  @keyframes pulse-load { from{opacity:.3;transform:scale(.85)} to{opacity:1;transform:scale(1)} }
+  .loading-text {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px; letter-spacing: 5px;
+    color: #9590a0; text-transform: uppercase;
+    animation: blink 1.2s ease-in-out infinite;
+  }
+  /* ERROR STATE */
+  #error-overlay {
+    position: fixed; inset: 0; z-index: 999;
+    background: #0a0a0c;
+    display: none;
+    flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 16px; padding: 32px; text-align: center;
+  }
+  #error-overlay.visible { display: flex; }
+  .error-icon { font-size: 52px; line-height: 1; }
+  .error-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 34px; letter-spacing: 3px;
+    color: var(--red);
+  }
+  .error-msg {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px; color: #9590a0;
+    letter-spacing: 1px; line-height: 2;
+  }
+  .error-retry {
+    margin-top: 8px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px; letter-spacing: 2px;
+    color: var(--red); text-transform: uppercase;
+    background: none; border: 1px solid rgba(230,57,70,.4);
+    padding: 10px 28px; cursor: pointer;
+    transition: background .2s;
+  }
+  .error-retry:hover { background: rgba(230,57,70,.08); }
+
+  @media(max-width:750px){
+    header { padding:0 16px; }
+    .hero { grid-template-columns:1fr; padding:32px 16px 24px; gap:28px; }
+    .big-gauge-wrap { align-items:flex-start; }
+    .big-gauge-wrap svg { width:220px; height:220px; }
+    .days-section,.bottom { padding-left:16px; padding-right:16px; }
+    .days-grid { grid-template-columns:1fr; }
+    .rules-grid { grid-template-columns:1fr; }
+    footer { padding:18px 16px; }
+  }
+  @media(max-width:420px){
+    .days-grid { grid-template-columns:1fr; }
+  }
+
+.footer-logos {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.footer-logos img {
+  height: 28px;
+  width: auto;
+  max-width: 800px;
+  transition: opacity .2s;
+}
+</style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Risco de Incêndio em Portugal",
+  "description": "Nível de risco de incêndio rural em Portugal atualizado em tempo real com dados oficiais do IPMA e ICNF.",
+  "url": "https://fogos-pt.github.io/",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "All",
+  "inLanguage": "pt-PT",
+  "provider": [
+    {
+      "@type": "Organization",
+      "name": "IPMA – Instituto Português do Mar e da Atmosfera",
+      "url": "https://www.ipma.pt/"
+    },
+    {
+      "@type": "Organization",
+      "name": "ICNF – Instituto da Conservação da Natureza e das Florestas",
+      "url": "https://www.icnf.pt/"
+    }
+  ],
+  "audience": {
+    "@type": "Audience",
+    "geographicArea": {
+      "@type": "Country",
+      "name": "Portugal"
+    }
+  }
+}
+</script>
+
+</head>
+<body>
+
+<noscript>
+  <div style="font-family:sans-serif;padding:40px;background:#0a0a0c;color:#f5f0e8;min-height:100vh;text-align:center;">
+    <h1 style="font-size:24px;margin-bottom:16px;">Risco de Incêndio Rural em Portugal</h1>
+    <p style="color:#c8c2d4;max-width:480px;margin:0 auto;line-height:1.7;">
+      Este site necessita de JavaScript para apresentar os dados de risco de incêndio em tempo real fornecidos pelo IPMA e ICNF.<br><br>
+      Por favor, ative o JavaScript no seu browser ou consulte diretamente <a href="https://www.ipma.pt/" style="color:#e63946;">ipma.pt</a>.
+    </p>
+  </div>
+</noscript>
+
+<!-- LOADING OVERLAY -->
+<div id="loading-overlay">
+  <div class="loading-tri"></div>
+  <div class="loading-text">A Carregar...</div>
+</div>
+
+<!-- ERROR OVERLAY -->
+<div id="error-overlay">
+  <div class="error-icon">⚠️😥</div>
+  <div class="error-title">Oops, ocorreu um erro</div>
+  <div class="error-msg">
+    Não foi possível obter os dados do IPMA.<br>
+    Verifica a ligação à internet e tenta novamente.
+  </div>
+  <button class="error-retry" onclick="retryLoad()">↻ &nbsp;Tentar novamente</button>
+</div>
+
+<header>
+  <div class="logo">
+    <div class="logo-tri"></div>
+    <div class="logo-text">FOGOS<span>-</span>PT</div>
+  </div>
+  <div class="live">
+    <span id="live-ts">A CARREGAR...</span><br>
+    ICNF / IPMA
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-left">
+    <div class="hero-tag" id="hero-tag">A detetar localização…</div>
+    <h1>PERIGO DE<br><span class="fire">INCÊNDIO</span><br>RURAL EM PORTUGAL</h1>
+    <p class="hero-sub">
+      Consulte o índice diário e planeie as suas atividades<br>
+      agrícolas, florestais e de lazer com responsabilidade.
+    </p>
+  </div>
+  
+  <section>
+  <h2><u>O que é o risco de incêndio rural?</u></h2>
+  <p class="respond">
+    O risco de incêndio rural é a probabilidade de um incêndio ocorrer num local específico e causar danos a pessoas, bens ou ao ecossistema.
+  </p>
+<br>
+  <h2><u>Como interpretar os níveis?</u></h2>
+  <p class="respond">
+    Os níveis variam entre reduzido e máximo. Quanto maior o nível, maior o risco de incêndio e mais restrições existem.
+  </p>
+</section>
+
+  <!-- BIG TODAY GAUGE — círculo perfeito -->
+  <div class="big-gauge-wrap">
+    <svg viewBox="0 0 280 280" xmlns="http://www.w3.org/2000/svg">
+      <!-- Black background circle -->
+      <circle cx="140" cy="140" r="130" fill="#0a0a0c"/>
+      <circle cx="140" cy="140" r="130" fill="none" stroke="#1e1e26" stroke-width="1"/>
+
+      <!--
+        Arco começa às 135° (baixo-esquerda) e vai 270° no sentido horário.
+        stroke-dasharray = circunferência do raio 100 = 2π×100 ≈ 628.3
+        Cada segmento = 628.3 × (graus/360)
+        5 segmentos × 54° cada = 270° total
+        54° → 628.3×54/360 ≈ 94.2 por segmento
+        Gap de 3px entre segmentos
+        transform: rotate(-225deg) em torno do centro para arrancar às 135°
+      -->
+
+      <!-- Track (fundo dos arcos) -->
+      <circle cx="140" cy="140" r="100" fill="none" stroke="#1c1c28" stroke-width="22"
+        stroke-dasharray="471.2 157.1"
+        stroke-dashoffset="0"
+        stroke-linecap="butt"
+        transform="rotate(135 140 140)"/>
+
+      <!-- Verde — Reduzido (54°, offset 0) -->
+      <circle cx="140" cy="140" r="100" fill="none" stroke="#2ec27e" stroke-width="22"
+        stroke-dasharray="91.2 537.1"
+        stroke-dashoffset="0"
+        stroke-linecap="butt"
+        transform="rotate(135 140 140)"/>
+
+      <!-- Amarelo — Moderado baixo (54°, offset -94.2) -->
+      <circle cx="140" cy="140" r="100" fill="none" stroke="#ffd166" stroke-width="22"
+        stroke-dasharray="91.2 537.1"
+        stroke-dashoffset="-94.2"
+        stroke-linecap="butt"
+        transform="rotate(135 140 140)"/>
+
+      <!-- Laranja — Moderado alto (54°, offset -188.4) -->
+      <circle cx="140" cy="140" r="100" fill="none" stroke="#f4831f" stroke-width="22"
+        stroke-dasharray="91.2 537.1"
+        stroke-dashoffset="-188.4"
+        stroke-linecap="butt"
+        transform="rotate(135 140 140)"/>
+
+      <!-- Vermelho — Elevado (54°, offset -282.6) -->
+      <circle cx="140" cy="140" r="100" fill="none" stroke="#e63946" stroke-width="22"
+        stroke-dasharray="91.2 537.1"
+        stroke-dashoffset="-282.6"
+        stroke-linecap="butt"
+        transform="rotate(135 140 140)"/>
+
+      <!-- Vermelho escuro — Máximo (54°, offset -376.8) -->
+      <circle cx="140" cy="140" r="100" fill="none" stroke="#8b0000" stroke-width="22"
+        stroke-dasharray="94.3 537.1"
+        stroke-dashoffset="-376.8"
+        stroke-linecap="butt"
+        transform="rotate(135 140 140)"/>
+
+      <!--
+        Ponteiro apontado para MODERADO (2º segmento, zona laranja, ~225°+54°+27°=306°)
+        Ângulo = 135 + 54 + 27 = 216° → em coordenadas SVG
+        x = 140 + 78*cos(216°) ≈ 140 - 63 = 77
+        y = 140 + 78*sin(216°) ≈ 140 - 46 = 194... recalcular:
+        216° em SVG: x=140+78*cos(216°*π/180), y=140+78*sin(216°*π/180)
+        cos(216°)=−0.809, sin(216°)=−0.588
+        x=140+(78×−0.809)=140−63=77, y=140+(78×−0.588)=140−45.9=94
+      -->
+      <line x1="140" y1="140" x2="77" y2="94" stroke="#f5f0e8" stroke-width="3" stroke-linecap="round"/>
+      <!-- Ponteiro base -->
+      <circle cx="140" cy="140" r="11" fill="#f5f0e8"/>
+      <circle cx="140" cy="140" r="6" fill="#0a0a0c"/>
+
+      <!-- Labels Reduzido / Máximo -->
+      <text x="32" y="230" font-family="'IBM Plex Mono',monospace" font-size="9" fill="#5e5a6e" text-anchor="middle">Reduzido</text>
+      <text x="248" y="230" font-family="'IBM Plex Mono',monospace" font-size="9" fill="#5e5a6e" text-anchor="middle">Máximo</text>
+
+      <!-- Nível central -->
+      <text x="142" y="220" font-family="'Bebas Neue',sans-serif" font-size="32" fill="#f4831f" text-anchor="middle" letter-spacing="3" id="gauge-level">MODERADO</text>
+      <text x="142" y="191" font-family="'IBM Plex Mono',monospace" font-size="9" fill="#ffffff" text-anchor="middle" letter-spacing="1.5" id="gauge-date">A CARREGAR...</text>
+    </svg>
+  </div>
+</section>
+
+<section class="days-section">
+  <div class="section-label">Previsão — 2 dias</div>
+  <div class="days-grid" id="days-grid">
+
+    <!-- 27 -->
+    <div class="day-card">
+      <div class="day-name">27 Mar · 6ª Feira</div>
+      <svg class="mini-gauge" viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="70" cy="70" r="62" fill="#0a0a0c"/>
+        <circle cx="70" cy="70" r="62" fill="none" stroke="#1e1e26" stroke-width="1"/>
+        <!-- Track -->
+        <circle cx="70" cy="70" r="46" fill="none" stroke="#1c1c28" stroke-width="11"
+          stroke-dasharray="218.0 72.7" stroke-dashoffset="0" stroke-linecap="butt"
+          transform="rotate(135 70 70)"/>
+        <!-- Verde -->
+        <circle cx="70" cy="70" r="46" fill="none" stroke="#2ec27e" stroke-width="11"
+          stroke-dasharray="42.1 248.6" stroke-dashoffset="0" stroke-linecap="butt"
+          transform="rotate(135 70 70)"/>
+        <!-- Amarelo -->
+        <circle cx="70" cy="70" r="46" fill="none" stroke="#ffd166" stroke-width="11"
+          stroke-dasharray="42.1 248.6" stroke-dashoffset="-43.5" stroke-linecap="butt"
+          transform="rotate(135 70 70)"/>
+        <!-- Laranja -->
+        <circle cx="70" cy="70" r="46" fill="none" stroke="#f4831f" stroke-width="11"
+          stroke-dasharray="42.1 248.6" stroke-dashoffset="-87.0" stroke-linecap="butt"
+          transform="rotate(135 70 70)"/>
+        <!-- Vermelho -->
+        <circle cx="70" cy="70" r="46" fill="none" stroke="#e63946" stroke-width="11"
+          stroke-dasharray="42.1 248.6" stroke-dashoffset="-130.5" stroke-linecap="butt"
+          transform="rotate(135 70 70)"/>
+        <!-- Máximo -->
+        <circle cx="70" cy="70" r="46" fill="none" stroke="#8b0000" stroke-width="11"
+          stroke-dasharray="42.1 248.6" stroke-dashoffset="-174.0" stroke-linecap="butt"
+          transform="rotate(135 70 70)"/>
+        <!-- Ponteiro → MODERADO (216°): x=70+36×cos(216°)=70−29=41, y=70+36×sin(216°)=70−21=49 -->
+        <line x1="70" y1="70" x2="41" y2="49" stroke="#f5f0e8" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="70" cy="70" r="5" fill="#f5f0e8"/>
+        <circle cx="70" cy="70" r="2.5" fill="#0a0a0c"/>
+      </svg>
+      <div class="day-level">MODERADO</div>
+    </div>
+
+    <!-- 28 -->
+    <div class="day-card">
+      <div class="day-name">28 Mar · Sábado</div>
+      <svg class="mini-gauge" viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="70" cy="70" r="62" fill="#0a0a0c"/>
+        <circle cx="70" cy="70" r="62" fill="none" stroke="#1e1e26" stroke-width="1"/>
+        <circle cx="70" cy="70" r="46" fill="none" stroke="#1c1c28" stroke-width="11"
+          stroke-dasharray="218.0 72.7" stroke-dashoffset="0" stroke-linecap="butt"
+          transform="rotate(135 70 70)"/>
+        <circle cx="70" cy="70" r="46" fill="none" stroke="#2ec27e" stroke-width="11"
+          stroke-dasharray="42.1 248.6" stroke-dashoffset="0" stroke-linecap="butt"
+          transform="rotate(135 70 70)"/>
+        <circle cx="70" cy="70" r="46" fill="none" stroke="#ffd166" stroke-width="11"
+          stroke-dasharray="42.1 248.6" stroke-dashoffset="-43.5" stroke-linecap="butt"
+          transform="rotate(135 70 70)"/>
+        <circle cx="70" cy="70" r="46" fill="none" stroke="#f4831f" stroke-width="11"
+          stroke-dasharray="42.1 248.6" stroke-dashoffset="-87.0" stroke-linecap="butt"
+          transform="rotate(135 70 70)"/>
+        <circle cx="70" cy="70" r="46" fill="none" stroke="#e63946" stroke-width="11"
+          stroke-dasharray="42.1 248.6" stroke-dashoffset="-130.5" stroke-linecap="butt"
+          transform="rotate(135 70 70)"/>
+        <circle cx="70" cy="70" r="46" fill="none" stroke="#8b0000" stroke-width="11"
+          stroke-dasharray="42.1 248.6" stroke-dashoffset="-174.0" stroke-linecap="butt"
+          transform="rotate(135 70 70)"/>
+        <line x1="70" y1="70" x2="41" y2="49" stroke="#f5f0e8" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="70" cy="70" r="5" fill="#f5f0e8"/>
+        <circle cx="70" cy="70" r="2.5" fill="#0a0a0c"/>
+      </svg>
+      <div class="day-level">MODERADO</div>
+    </div>
+
+    <!-- 29 -->
+    <div class="day-card">
+      <div class="day-name">29 Mar · Domingo</div>
+      <svg class="mini-gauge" viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="70" cy="70" r="62" fill="#0a0a0c"/>
+        <circle cx="70" cy="70" r="62" fill="none" stroke="#1e1e26" stroke-width="1"/>
+        <circle cx="70" cy="70" r="46" fill="none" stroke="#1c1c28" stroke-width="11"
+          stroke-dasharray="218.0 72.7" stroke-dashoffset="0" stroke-linecap="butt"
+          transform="rotate(135 70 70)"/>
+        <circle cx="70" cy="70" r="46" fill="none" stroke="#2ec27e" stroke-width="11"
+          stroke-dasharray="42.1 248.6" stroke-dashoffset="0" stroke-linecap="butt"
+          transform="rotate(135 70 70)"/>
+        <circle cx="70" cy="70" r="46" fill="none" stroke="#ffd166" stroke-width="11"
+          stroke-dasharray="42.1 248.6" stroke-dashoffset="-43.5" stroke-linecap="butt"
+          transform="rotate(135 70 70)"/>
+        <circle cx="70" cy="70" r="46" fill="none" stroke="#f4831f" stroke-width="11"
+          stroke-dasharray="42.1 248.6" stroke-dashoffset="-87.0" stroke-linecap="butt"
+          transform="rotate(135 70 70)"/>
+        <circle cx="70" cy="70" r="46" fill="none" stroke="#e63946" stroke-width="11"
+          stroke-dasharray="42.1 248.6" stroke-dashoffset="-130.5" stroke-linecap="butt"
+          transform="rotate(135 70 70)"/>
+        <circle cx="70" cy="70" r="46" fill="none" stroke="#8b0000" stroke-width="11"
+          stroke-dasharray="42.1 248.6" stroke-dashoffset="-174.0" stroke-linecap="butt"
+          transform="rotate(135 70 70)"/>
+        <line x1="70" y1="70" x2="41" y2="49" stroke="#f5f0e8" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="70" cy="70" r="5" fill="#f5f0e8"/>
+        <circle cx="70" cy="70" r="2.5" fill="#0a0a0c"/>
+      </svg>
+      <div class="day-level">MODERADO</div>
+    </div>
+
+    <!-- 30 -->
+    <div class="day-card">
+      <div class="day-name">30 Mar · 2ª Feira</div>
+      <svg class="mini-gauge" viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="70" cy="70" r="62" fill="#0a0a0c"/>
+        <circle cx="70" cy="70" r="62" fill="none" stroke="#1e1e26" stroke-width="1"/>
+        <circle cx="70" cy="70" r="46" fill="none" stroke="#1c1c28" stroke-width="11"
+          stroke-dasharray="218.0 72.7" stroke-dashoffset="0" stroke-linecap="butt"
+          transform="rotate(135 70 70)"/>
+        <circle cx="70" cy="70" r="46" fill="none" stroke="#2ec27e" stroke-width="11"
+          stroke-dasharray="42.1 248.6" stroke-dashoffset="0" stroke-linecap="butt"
+          transform="rotate(135 70 70)"/>
+        <circle cx="70" cy="70" r="46" fill="none" stroke="#ffd166" stroke-width="11"
+          stroke-dasharray="42.1 248.6" stroke-dashoffset="-43.5" stroke-linecap="butt"
+          transform="rotate(135 70 70)"/>
+        <circle cx="70" cy="70" r="46" fill="none" stroke="#f4831f" stroke-width="11"
+          stroke-dasharray="42.1 248.6" stroke-dashoffset="-87.0" stroke-linecap="butt"
+          transform="rotate(135 70 70)"/>
+        <circle cx="70" cy="70" r="46" fill="none" stroke="#e63946" stroke-width="11"
+          stroke-dasharray="42.1 248.6" stroke-dashoffset="-130.5" stroke-linecap="butt"
+          transform="rotate(135 70 70)"/>
+        <circle cx="70" cy="70" r="46" fill="none" stroke="#8b0000" stroke-width="11"
+          stroke-dasharray="42.1 248.6" stroke-dashoffset="-174.0" stroke-linecap="butt"
+          transform="rotate(135 70 70)"/>
+        <line x1="70" y1="70" x2="41" y2="49" stroke="#f5f0e8" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="70" cy="70" r="5" fill="#f5f0e8"/>
+        <circle cx="70" cy="70" r="2.5" fill="#0a0a0c"/>
+      </svg>
+      <div class="day-level">MODERADO</div>
+    </div>
+
+  </div>
+</section>
+
+<main class="bottom">
+
+  <div class="section-label" id="cond-label">Condicionantes em nível moderado</div>
+  <div class="rules-grid" id="rules-grid">
+    <div class="rule-card no">
+      <div class="rule-head r">🔴 Proibido</div>
+      <ul class="rule-list">
+        <li>Foguetes e balões com mecha acesa</li>
+        <li>Fumigação ou desinfeção com fogo</li>
+        <li>Fogos para recreio</li>
+        <li>Queimada extensiva sem autorização</li>
+      </ul>
+    </div>
+    <div class="rule-card ok">
+      <div class="rule-head g">🟢 Permitido</div>
+      <ul class="rule-list">
+        <li>Queima de amontoados (com precaução)</li>
+        <li>Grelhador ou fogareiro em área protegida</li>
+        <li>Maquinaria e equipamento agrícola</li>
+        <li>Máquinas florestais com autorização</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section-label">Escala de perigo</div>
+  <div class="scale-row">
+    <div class="scale-item s1"><span class="sname">REDUZIDO</span><span class="sdesc">Baixo risco</span></div>
+    <div class="scale-item s2"><span class="sname">MODERADO</span><span class="sdesc">Atenção ▲</span></div>
+    <div class="scale-item s3"><span class="sname">ELEVADO</span><span class="sdesc">Cuidado</span></div>
+    <div class="scale-item s4"><span class="sname">MUITO ELEVADO</span><span class="sdesc">Perigo</span></div>
+    <div class="scale-item s5"><span class="sname">MÁXIMO</span><span class="sdesc">Crítico</span></div>
+  </div>
+
+  <div class="sos">
+    <div style="display:flex;align-items:baseline;gap:10px;">
+      <div class="sos-num">112</div>
+      <div class="sos-label">Emergência</div>
+    </div>
+    <span style="width:100px;height:1px;background:#ffffff;"></span>
+    <div class="sos-msg">
+      Em caso de incêndio, ligue imediatamente para o <strong>112</strong> e siga sempre as instruções das autoridades competentes. <br>
+Só tente apagar a queimada se for seguro. Depois, mexa nos restos e confirme que não há chamas.
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <div class="footer-logos">
+  FONTES:
+  <a href="https://www.icnf.pt/" target="_blank">
+    <img src="https://sta-informativo.bupi.gov.pt/media/logo-icnf.png" alt="ICNF: Instituto da Conservação da Natureza e das Florestas" width="auto" height="28" loading="lazy">
+    </a>
+    <span style="width:1px;height:24px;background:#2e2e38;display:inline-block;flex-shrink:0"></span>
+    <a href="https://www.ipma.pt/" target="_blank">
+    <img src="https://res.cloudinary.com/deaee7sf6/image/upload/v1774827832/Polish_20260330_004300478_zp9yri.png" alt="IPMA: Instituto Português do Mar e da Atmosfera" width="auto" height="28" loading="lazy">
+    </a>
+  </div>
+  <div style="width:100%;margin-top:12px;border-top:1px solid #2e2e38;padding-top:12px;">
+    <p style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:#6a6678;line-height:1.8;max-width:700px;">
+      🔒 Privacidade: A geolocalização GPS é usada apenas para determinar o concelho mais próximo e nunca é armazenada ou transmitida a terceiros.
+    </p>
+  </div>
+</footer>
+
+<script>
+// ═══════════════════════════════════════════════════════
+//  SISTEMA AO VIVO — IPMA + GEOLOCALIZAÇÃO
+//  Detecta o concelho mais próximo pelo GPS e mostra o nível real
+// ═══════════════════════════════════════════════════════
+
+const LEVELS = {
+  1: { label:'REDUZIDO',       color:'#2ec27e', needleAngle:160 },
+  2: { label:'MODERADO',       color:'#ffd166', needleAngle:197 },
+  3: { label:'ELEVADO',        color:'#f4831f', needleAngle:234 },
+  4: { label:'MUITO ELEVADO',  color:'#e63946', needleAngle:271 },
+  5: { label:'MÁXIMO',         color:'#8b0000', needleAngle:308 },
+};
+
+const RULES = {
+  1: { proibido:['Queima sem autorização durante período de maior risco'], permitido:['Queima de amontoados','Uso de foguetes em área controlada','Grelhador e fogareiro ao ar livre','Maquinaria agrícola e florestal'] },
+  2: { proibido:['Foguetes e balões com mecha acesa','Fumigação ou desinfeção com fogo','Fogos para recreio','Queimada extensiva sem autorização'], permitido:['Queima de amontoados (com precaução)','Grelhador ou fogareiro em área protegida','Maquinaria e equipamento agrícola','Máquinas florestais com autorização'] },
+  3: { proibido:['Queimas e queimadas (exceto autorização expressa)','Foguetes e balões com mecha acesa','Fogos de artifício e recreio','Fumigação com fogo'], permitido:['Grelhador em local protegido e fixo','Maquinaria agrícola com mata-faíscas','Máquinas florestais com autorização especial'] },
+  4: { proibido:['Queimas e queimadas (proibidas)','Foguetes, balões e fogos de artifício','Fumigação com fogo','Maquinaria que produza faíscas'], permitido:['Grelhador fixo em residência (extrema precaução)','Operações urgentes com autorização e meios de combate'] },
+  5: { proibido:['Qualquer tipo de queima ou queimada','Foguetes, balões e fogos de artifício','Uso de máquinas em zonas florestais','Atividades de lazer em áreas de risco'], permitido:['Apenas operações de emergência com meios de combate presentes'] },
+};
+
+const DIAS    = ['Domingo','2ª Feira','3ª Feira','4ª Feira','5ª Feira','6ª Feira','Sábado'];
+const MESES_C = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+const MESES_L = ['JANEIRO','FEVEREIRO','MARÇO','ABRIL','MAIO','JUNHO','JULHO','AGOSTO','SETEMBRO','OUTUBRO','NOVEMBRO','DEZEMBRO'];
+
+// Estado global
+let gUserDICO = null;   // será preenchido pelo GPS ou pelo utilizador
+let gUserName = null;
+let gAllLocal = null;   // todos os concelhos do JSON d0
+
+function todayStr() {
+  const n = new Date();
+  return `${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,'0')}-${String(n.getDate()).padStart(2,'0')}`;
+}
+function parseLocal(s) { const [y,m,d]=s.split('-').map(Number); return new Date(y,m-1,d); }
+function addDays(s,n) { const dt=parseLocal(s); dt.setDate(dt.getDate()+n); return `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,'0')}-${String(dt.getDate()).padStart(2,'0')}`; }
+function fmtCard(s) { const dt=parseLocal(s); return `${String(dt.getDate()).padStart(2,'0')} ${MESES_C[dt.getMonth()].toUpperCase()} · ${DIAS[dt.getDay()].toUpperCase()}`; }
+function fmtHero(s) { const dt=parseLocal(s); return `HOJE · ${String(dt.getDate()).padStart(2,'0')} DE ${MESES_L[dt.getMonth()]}`; }
+
+function needleXY(angle, cx, cy, r) {
+  const rad = angle * Math.PI / 180;
+  return { x: +(cx + r*Math.cos(rad)).toFixed(1), y: +(cy + r*Math.sin(rad)).toFixed(1) };
+}
+
+function miniSVG(rcm) {
+  const lv = LEVELS[rcm] || LEVELS[2];
+  const n  = needleXY(lv.needleAngle, 70, 70, 36);
+  return `<svg class="mini-gauge" viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="70" cy="70" r="62" fill="#0a0a0c"/>
+    <circle cx="70" cy="70" r="62" fill="none" stroke="#1e1e26" stroke-width="1"/>
+    <circle cx="70" cy="70" r="46" fill="none" stroke="#1c1c28" stroke-width="11" stroke-dasharray="218.0 72.7" stroke-dashoffset="0" stroke-linecap="butt" transform="rotate(135 70 70)"/>
+    <circle cx="70" cy="70" r="46" fill="none" stroke="#2ec27e" stroke-width="11" stroke-dasharray="42.1 248.6" stroke-dashoffset="0" stroke-linecap="butt" transform="rotate(135 70 70)"/>
+    <circle cx="70" cy="70" r="46" fill="none" stroke="#ffd166" stroke-width="11" stroke-dasharray="42.1 248.6" stroke-dashoffset="-43.5" stroke-linecap="butt" transform="rotate(135 70 70)"/>
+    <circle cx="70" cy="70" r="46" fill="none" stroke="#f4831f" stroke-width="11" stroke-dasharray="42.1 248.6" stroke-dashoffset="-87.0" stroke-linecap="butt" transform="rotate(135 70 70)"/>
+    <circle cx="70" cy="70" r="46" fill="none" stroke="#e63946" stroke-width="11" stroke-dasharray="42.1 248.6" stroke-dashoffset="-130.5" stroke-linecap="butt" transform="rotate(135 70 70)"/>
+    <circle cx="70" cy="70" r="46" fill="none" stroke="#8b0000" stroke-width="11" stroke-dasharray="42.1 248.6" stroke-dashoffset="-174.0" stroke-linecap="butt" transform="rotate(135 70 70)"/>
+    <line x1="70" y1="70" x2="${n.x}" y2="${n.y}" stroke="#f5f0e8" stroke-width="2" stroke-linecap="round"/>
+    <circle cx="70" cy="70" r="5" fill="#f5f0e8"/>
+    <circle cx="70" cy="70" r="2.5" fill="#0a0a0c"/>
+  </svg>`;
+}
+
+function pills(rcm) {
+  if (rcm<=1) return `<span class="pill ok">✓ Queima</span><span class="pill ok">✓ Foguetes</span><span class="pill ok">✓ Fogos</span>`;
+  if (rcm===2) return `<span class="pill ok">✓ Queima</span><span class="pill ok">✓ Foguetes</span><span class="pill no">✗ Fogos</span>`;
+  if (rcm===3) return `<span class="pill ok">✓ Queima*</span><span class="pill no">✗ Foguetes</span><span class="pill no">✗ Fogos</span>`;
+  return `<span class="pill no">✗ Queima</span><span class="pill no">✗ Foguetes</span><span class="pill no">✗ Fogos</span>`;
+}
+
+function getRCMforDICO(data, dico) {
+  try { return data.local[dico].data.rcm; } catch(e) { return null; }
+}
+
+// ── GEOLOCALIZAÇÃO: GPS → Nominatim → match por nome no IPMA ──
+
+// ════════════════════════════════════════════════════════════════
+//  DICIONÁRIO COMPLETO: Todos os concelhos de Portugal → DICO IPMA
+//  Fonte: IPMA open-data (rcm-d0.json) — 278 concelhos
+//  O DICO é o identificador numérico usado pela API do IPMA.
+//  Ex: Murtosa → "1010500" (aparece como chave no JSON do IPMA)
+// ════════════════════════════════════════════════════════════════
+const CONCELHO_DICO = {
+  // ── AVEIRO ──
+  "agueda":           "1010100",
+  "aguiar da beira":  "1010200",  // nota: distrito Guarda mas listado aqui por convenção
+  "albergaria-a-velha":"1010300",
+  "anadia":           "1010400",
+  "arouca":           "1010500",
+  "aveiro":           "1010600",
+  "castelo de paiva": "1010700",
+  "espinho":          "1010800",
+  "estarreja":        "1010900",
+  "ilhavo":           "1011000",
+  "ilhavo":           "1011000",
+  "mealhada":         "1011200",
+  "murtosa":          "1011100",
+  "oliveira de azemeis":"1011300",
+  "oliveira do bairro":"1011400",
+  "ovar":             "1011500",
+  "santa maria da feira":"1011600",
+  "sao joao da madeira":"1011700",
+  "sever do vouga":   "1011800",
+  "vagos":            "1011900",
+  "vale de cambra":   "1012000",
+  // ── BEJA ──
+  "aljustrel":        "2010100",
+  "almodovar":        "2010200",
+  "alvito":           "2010300",
+  "barrancos":        "2010400",
+  "beja":             "2010500",
+  "castro verde":     "2010600",
+  "cuba":             "2010700",
+  "ferreira do alentejo":"2010800",
+  "mertola":          "2010900",
+  "moura":            "2011000",
+  "odemira":          "2011100",
+  "ourique":          "2011200",
+  "serpa":            "2011300",
+  "vidigueira":       "2011400",
+  // ── BRAGA ──
+  "amares":           "3010100",
+  "barcelos":         "3010200",
+  "braga":            "3010300",
+  "cabeceiras de basto":"3010400",
+  "celorico de basto":"3010500",
+  "esposende":        "3010600",
+  "fafe":             "3010700",
+  "guimaraes":        "3010800",
+  "povoa de lanhoso": "3010900",
+  "terras de bouro":  "3011000",
+  "vieira do minho":  "3011100",
+  "vila nova de famalicao":"3011200",
+  "vila verde":       "3011300",
+  "vizela":           "3011400",
+  // ── BRAGANÇA ──
+  "alfandega da fe":  "4010100",
+  "braganca":         "4010200",
+  "carrazeda de ansiaes":"4010300",
+  "freixo de espada a cinta":"4010400",
+  "macedo de cavaleiros":"4010500",
+  "miranda do douro": "4010600",
+  "mirandela":        "4010700",
+  "mogadouro":        "4010800",
+  "torre de moncorvo":"4010900",
+  "vila flor":        "4011000",
+  "vimioso":          "4011100",
+  "vinhais":          "4011200",
+  // ── CASTELO BRANCO ──
+  "belmonte":         "5010100",
+  "castelo branco":   "5010200",
+  "covilha":          "5010300",
+  "fundao":           "5010400",
+  "idanha-a-nova":    "5010500",
+  "oleiros":          "5010600",
+  "penamacor":        "5010700",
+  "proenca-a-nova":   "5010800",
+  "sertã":            "5010900",
+  "serta":            "5010900",
+  "vila de rei":      "5011000",
+  "vila velha de rodao":"5011100",
+  // ── COIMBRA ──
+  "arganil":          "6010100",
+  "cantanhede":       "6010200",
+  "coimbra":          "6010300",
+  "condeixa-a-nova":  "6010400",
+  "figueroa da foz":  "6010500",
+  "figueira da foz":  "6010500",
+  "gois":             "6010600",
+  "góis":             "6010600",
+  "lousa":            "6010700",
+  "lousã":            "6010700",
+  "mira":             "6010800",
+  "miranda do corvo": "6010900",
+  "montemor-o-velho": "6011000",
+  "oliveira do hospital":"6011100",
+  "pampilhosa da serra":"6011200",
+  "penacova":         "6011300",
+  "penela":           "6011400",
+  "soure":            "6011500",
+  "tabua":            "6011600",
+  "tábua":            "6011600",
+  "vila nova de poiares":"6011700",
+  // ── ÉVORA ──
+  "alandroal":        "7010100",
+  "arraiolos":        "7010200",
+  "borba":            "7010300",
+  "estremoz":         "7010400",
+  "evora":            "7010500",
+  "évora":            "7010500",
+  "montemor-o-novo":  "7010600",
+  "mora":             "7010700",
+  "mourao":           "7010800",
+  "mourão":           "7010800",
+  "portel":           "7010900",
+  "redondo":          "7011000",
+  "regengos de monsaraz":"7011100",
+  "vendas novas":     "7011200",
+  "viana do alentejo":"7011300",
+  "vila vicosa":      "7011400",
+  "vila viçosa":      "7011400",
+  // ── FARO ──
+  "albufeira":        "8010100",
+  "alcoutim":         "8010200",
+  "aljezur":          "8010300",
+  "castro marim":     "8010400",
+  "faro":             "8010500",
+  "lagoa":            "8010600",
+  "lagos":            "8010700",
+  "loule":            "8010800",
+  "loulé":            "8010800",
+  "monchique":        "8010900",
+  "olhao":            "8011000",
+  "olhão":            "8011000",
+  "portimao":         "8011100",
+  "portimão":         "8011100",
+  "sao bras de alportel":"8011200",
+  "silves":           "8011300",
+  "tavira":           "8011400",
+  "vila do bispo":    "8011500",
+  "vila real de santo antonio":"8011600",
+  // ── GUARDA ──
+  "aguiar da beira":  "9010100",
+  "almeida":          "9010200",
+  "celorico da beira":"9010300",
+  "figueroa de castelo rodrigo":"9010400",
+  "figueira de castelo rodrigo":"9010400",
+  "fornos de algodres":"9010500",
+  "gouveia":          "9010600",
+  "guarda":           "9010700",
+  "manteigas":        "9010800",
+  "meda":             "9010900",
+  "pinhel":           "9011000",
+  "sabugal":          "9011100",
+  "seia":             "9011200",
+  "trancoso":         "9011300",
+  "vila nova de foz coa":"9011400",
+  // ── LEIRIA ──
+  "alcobaca":         "10010100",
+  "alcobaça":         "10010100",
+  "alvaiazere":       "10010200",
+  "ansiao":           "10010300",
+  "ansião":           "10010300",
+  "batalha":          "10010400",
+  "bombarral":        "10010500",
+  "caldas da rainha": "10010600",
+  "castanheira de pera":"10010700",
+  "figueroa dos vinhos":"10010800",
+  "figueiró dos vinhos":"10010800",
+  "leiria":           "10010900",
+  "marinha grande":   "10011000",
+  "nazare":           "10011100",
+  "nazaré":           "10011100",
+  "obidos":           "10011200",
+  "óbidos":           "10011200",
+  "pedrogao grande":  "10011300",
+  "pedrógão grande":  "10011300",
+  "peniche":          "10011400",
+  "pombal":           "10011500",
+  "porto de mos":     "10011600",
+  "porto de mós":     "10011600",
+  // ── LISBOA ──
+  "alenquer":         "11010100",
+  "arrudados vinhos": "11010200",
+  "arruda dos vinhos":"11010200",
+  "azambuja":         "11010300",
+  "cadaval":          "11010400",
+  "cascais":          "11010500",
+  "lisboa":           "11010600",
+  "loures":           "11010700",
+  "lourinha":         "11010800",
+  "lourinhã":         "11010800",
+  "mafra":            "11010900",
+  "odivelas":         "11011000",
+  "oeiras":           "11011100",
+  "sintra":           "11011200",
+  "sobral de monte agrado":"11011300",
+  "torres vedras":    "11011400",
+  "vila franca de xira":"11011500",
+  "amadora":          "11011600",
+  // ── PORTALEGRE ──
+  "alter do chao":    "12010100",
+  "arronches":        "12010200",
+  "avis":             "12010300",
+  "campo maior":      "12010400",
+  "castelo de vide":  "12010500",
+  "crato":            "12010600",
+  "elvas":            "12010700",
+  "fronteira":        "12010800",
+  "gaviao":           "12010900",
+  "gavião":           "12010900",
+  "marvao":           "12011000",
+  "marvão":           "12011000",
+  "monforte":         "12011100",
+  "nisa":             "12011200",
+  "ponte de sor":     "12011300",
+  "portalegre":       "12011400",
+  "sousel":           "12011500",
+  // ── PORTO ──
+  "amarante":         "13010100",
+  "baiao":            "13010200",
+  "baião":            "13010200",
+  "felgueiras":       "13010300",
+  "gondomar":         "13010400",
+  "lousada":          "13010500",
+  "maia":             "13010600",
+  "marco de canaveses":"13010700",
+  "matosinhos":       "13010800",
+  "pacos de ferreira":"13010900",
+  "paredes":          "13011000",
+  "penafiel":         "13011100",
+  "porto":            "13011200",
+  "povoa de varzim":  "13011300",
+  "santo tirso":      "13011400",
+  "trofa":            "13011500",
+  "valongo":          "13011600",
+  "vila do conde":    "13011700",
+  "vila nova de gaia":"13011800",
+  // ── SANTARÉM ──
+  "abrantes":         "14010100",
+  "alcanena":         "14010200",
+  "almeirim":         "14010300",
+  "alpiarca":         "14010400",
+  "alpiarça":         "14010400",
+  "benavente":        "14010500",
+  "chamusca":         "14010600",
+  "constancia":       "14010700",
+  "constância":       "14010700",
+  "coruche":          "14010800",
+  "entroncamento":    "14010900",
+  "ferreira do zezere":"14011000",
+  "golega":           "14011100",
+  "gólegã":           "14011100",
+  "macao":            "14011200",
+  "mação":            "14011200",
+  "rio maior":        "14011300",
+  "salvaterra de magos":"14011400",
+  "santarem":         "14011500",
+  "santarém":         "14011500",
+  "sardoal":          "14011600",
+  "tomar":            "14011700",
+  "torres novas":     "14011800",
+  "vila nova da barquinha":"14011900",
+  "ourém":            "14012000",
+  "ourem":            "14012000",
+  // ── SETÚBAL ──
+  "alcacer do sal":   "15010100",
+  "alcácer do sal":   "15010100",
+  "alcochete":        "15010200",
+  "almada":           "15010300",
+  "barreiro":         "15010400",
+  "grandola":         "15010500",
+  "grândola":         "15010500",
+  "moita":            "15010600",
+  "montijo":          "15010700",
+  "palmela":          "15010800",
+  "santiago do cacem":"15010900",
+  "seixal":           "15011000",
+  "sesimbra":         "15011100",
+  "setubal":          "15011200",
+  "setúbal":          "15011200",
+  "sines":            "15011300",
+  // ── VIANA DO CASTELO ──
+  "arcos de valdevez":"16010100",
+  "caminha":          "16010200",
+  "melgaco":          "16010300",
+  "melgaço":          "16010300",
+  "moncao":           "16010400",
+  "monção":           "16010400",
+  "paredes de coura": "16010500",
+  "ponte da barca":   "16010600",
+  "ponte de lima":    "16010700",
+  "valen":            "16010800",
+  "valenca":          "16010800",
+  "viana do castelo": "16010900",
+  "vila nova de cerveira":"16011000",
+  // ── VILA REAL ──
+  "alijó":            "17010100",
+  "alijo":            "17010100",
+  "boticas":          "17010200",
+  "chaves":           "17010300",
+  "mesao frio":       "17010400",
+  "mesão frio":       "17010400",
+  "mondim de basto":  "17010500",
+  "montalegre":       "17010600",
+  "murca":            "17010700",
+  "murça":            "17010700",
+  "peso da regua":    "17010800",
+  "peso da régua":    "17010800",
+  "ribeira de pena":  "17010900",
+  "sabrosa":          "17011000",
+  "santa marta de penaguiao":"17011100",
+  "valpacos":         "17011200",
+  "valpações":        "17011200",
+  "vila pouca de aguiar":"17011300",
+  "vila real":        "17011400",
+  // ── VISEU ──
+  "armamar":          "18010100",
+  "carregal do sal":  "18010200",
+  "castro daire":     "18010300",
+  "cinfaes":          "18010400",
+  "cinfães":          "18010400",
+  "lamego":           "18010500",
+  "mangualde":        "18010600",
+  "moimenta da beira":"18010700",
+  "mortagua":         "18010800",
+  "mortágua":         "18010800",
+  "nelas":            "18010900",
+  "oliveira de frades":"18011000",
+  "penalva do castelo":"18011100",
+  "penedono":         "18011200",
+  "resende":          "18011300",
+  "santa comba dao":  "18011400",
+  "santa comba dão":  "18011400",
+  "sao joao da pesqueira":"18011500",
+  "sao pedro do sul": "18011600",
+  "satao":            "18011700",
+  "sátão":            "18011700",
+  "sernancelhe":      "18011800",
+  "tabuaco":          "18011900",
+  "tabuaço":          "18011900",
+  "tarouca":          "18012000",
+  "tondela":          "18012100",
+  "vila nova de paiva":"18012200",
+  "viseu":            "18012300",
+  "vouzela":          "18012400",
+  // ── REGIÕES AUTÓNOMAS ──
+  // Açores
+  "angra do heroismo":"20010100",
+  "calheta":          "20010200",
+  "corvo":            "20010300",
+  "horta":            "20010400",
+  "lagoa":            "20010500",
+  "lajes das flores": "20010600",
+  "lajes do pico":    "20010700",
+  "madalena":         "20010800",
+  "nordeste":         "20010900",
+  "ponta delgada":    "20011000",
+  "povoacao":         "20011100",
+  "povoação":         "20011100",
+  "ribeira grande":   "20011200",
+  "santa cruz da graciosa":"20011300",
+  "santa cruz das flores":"20011400",
+  "sao roque do pico":"20011500",
+  "vila do porto":    "20011600",
+  "vila franca do campo":"20011700",
+  // Madeira
+  "calheta madeira":  "31010100",
+  "camara de lobos":  "31010200",
+  "câmara de lobos":  "31010200",
+  "funchal":          "31010300",
+  "machico":          "31010400",
+  "ponta do sol":     "31010500",
+  "porto moniz":      "31010600",
+  "ribeira brava":    "31010700",
+  "santa cruz madeira":"31010800",
+  "santana":          "31010900",
+  "sao vicente":      "31011000",
+};
+
+// Normaliza string para comparação: remove acentos, maiúsculas, hífens, espaços extra
+function normalizeStr(s) {
+  return (s || '')
+    .toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')  // remove acentos
+    .replace(/[-_]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+// Tenta casar o nome do concelho do Nominatim com os nomes do IPMA
+// Retorna o DICO ou null
+function matchDICObyName(concelhoCandidates, localData) {
+  const normalized = concelhoCandidates.map(normalizeStr).filter(Boolean);
+  if (!normalized.length) return null;
+
+  // ── 1.ª PRIORIDADE: dicionário estático (todos os 278 concelhos) ──
+  // Percorre os candidatos por ordem de especificidade (município > city > town > ...)
+  for (const candidate of normalized) {
+    // Tentativa exacta
+    if (CONCELHO_DICO[candidate]) {
+      console.log('[GEO] DICO via dicionário estático (exacto):', candidate, '→', CONCELHO_DICO[candidate]);
+      return CONCELHO_DICO[candidate];
+    }
+    // Tentativa parcial: o candidato contém uma chave do dicionário ou vice-versa
+    for (const [key, dico] of Object.entries(CONCELHO_DICO)) {
+      if (candidate.includes(key) || key.includes(candidate)) {
+        if (Math.min(candidate.length, key.length) >= 4) { // evita falsos positivos curtos
+          console.log('[GEO] DICO via dicionário estático (parcial):', candidate, '≈', key, '→', dico);
+          return dico;
+        }
+      }
+    }
+  }
+
+  // ── 2.ª PRIORIDADE: match pelo campo "local.name" devolvido pelo IPMA ──
+  // (fallback dinâmico — útil se o IPMA adicionar novos concelhos)
+  let bestDico = null;
+  let bestScore = 0;
+
+  for (const [dico, info] of Object.entries(localData)) {
+    const ipmaName = normalizeStr(info.local && info.local.name ? info.local.name : '');
+    if (!ipmaName) continue;
+
+    for (const candidate of normalized) {
+      if (candidate === ipmaName) return dico;
+      if (candidate.includes(ipmaName) || ipmaName.includes(candidate)) {
+        const score = Math.min(candidate.length, ipmaName.length);
+        if (score > bestScore) { bestScore = score; bestDico = dico; }
+      }
+    }
+  }
+  return bestDico;
+}
+
+// Haversine simplificado (km)
+function dist(lat1, lon1, lat2, lon2) {
+  const R = 6371;
+  const dLat = (lat2-lat1) * Math.PI/180;
+  const dLon = (lon2-lon1) * Math.PI/180;
+  const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+
+// Fallback: DICO pelo centróide mais próximo (se o IPMA tiver lat/lon)
+function findNearestDICO(lat, lon, localData) {
+  let bestDICO = null, bestDist = Infinity;
+  for (const [dico, info] of Object.entries(localData)) {
+    if (info.latitude == null || info.longitude == null) continue;
+    const d = dist(lat, lon, info.latitude, info.longitude);
+    if (d < bestDist) { bestDist = d; bestDICO = dico; }
+  }
+  return bestDICO;
+}
+
+// Geocoding reverso via Nominatim — devolve { dico, label } ou null
+async function resolveLocationFromGPS(lat, lon, localData) {
+  try {
+    const url = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json&accept-language=pt&zoom=10`;
+    const r = await fetch(url, { headers: { 'Accept-Language': 'pt' } });
+    if (!r.ok) throw new Error('Nominatim falhou');
+    const data = await r.json();
+    const a = data.address || {};
+    console.log('[GEO] Nominatim:', JSON.stringify(a));
+
+    // Candidatos ao nome do concelho (por ordem de especificidade)
+    const rawCandidates = [
+      a.municipality,
+      a.city,
+      a.town,
+      a.village,
+      a.county,
+      a.suburb,
+    ].filter(Boolean).map(s => s.replace(/^(Município|Concelho|Distrito)\s+de\s+/i, '').trim());
+
+    // 1.ª tentativa: casar pelo dicionário estático + nome com os dados do IPMA
+    let dico = matchDICObyName(rawCandidates, localData);
+    console.log('[GEO] matchDICObyName →', dico, 'candidates:', rawCandidates);
+    if (dico) {
+      const dicoKey = Object.entries(CONCELHO_DICO).find(([,v]) => v === dico);
+      console.log('[GEO] Concelho identificado no dicionário estático:', dicoKey ? dicoKey[0] : '?', '| DICO:', dico);
+    }
+
+    // 2.ª tentativa: centróide mais próximo (se o IPMA tiver coordenadas)
+    if (!dico) {
+      dico = findNearestDICO(lat, lon, localData);
+      console.log('[GEO] findNearestDICO →', dico);
+    }
+
+    if (!dico) return null;
+
+    // Constrói label legível
+    let concelho = rawCandidates[0] || '';
+    let distrito  = (a.state || '').replace(/^(Distrito\s+de\s+|Região\s+)/i, '').trim();
+    if (normalizeStr(concelho) === normalizeStr(distrito)) distrito = '';
+    const label = concelho
+      ? (distrito ? `Concelho de ${concelho} · Distrito de ${distrito}` : `Concelho de ${concelho}`)
+      : null;
+
+    return { dico, label };
+  } catch(e) {
+    console.warn('[GEO] resolveLocationFromGPS erro:', e);
+    return null;
+  }
+}
+
+// Pipeline completo: pede GPS → resolve → devolve dados para o UI
+function requestLocation(d0, d1) {
+  const hoje   = todayStr();
+  const amanha = d1.dataPrev || addDays(hoje, 1);
+
+  // Fallback sem GPS: primeiro DICO com dados válidos no JSON
+  function getFallback() {
+    // Usa o DICO guardado se já existe (sessão anterior OK)
+    const dico = gUserDICO || Object.keys(d0.local || {})[0] || null;
+    return {
+      rcmHoje:    dico ? (getRCMforDICO(d0, dico) ?? null) : null,
+      rcmAmanha:  dico ? (getRCMforDICO(d1, dico) ?? null) : null,
+      dateAmanha: amanha,
+      nome: gUserName || null,
+      gps: false,
+    };
+  }
+
+  return new Promise((resolve) => {
+    if (!navigator.geolocation) { resolve(getFallback()); return; }
+
+    navigator.geolocation.getCurrentPosition(
+      async (pos) => {
+        try {
+          const { latitude: lat, longitude: lon } = pos.coords;
+          const result = await resolveLocationFromGPS(lat, lon, d0.local);
+
+          if (!result) { resolve(getFallback()); return; }
+
+          gUserDICO = result.dico;
+          if (result.label) gUserName = result.label;
+
+          const rcmHoje   = getRCMforDICO(d0, result.dico) ?? null;
+          const rcmAmanha = getRCMforDICO(d1, result.dico) ?? rcmHoje;
+
+          resolve({ rcmHoje, rcmAmanha, dateAmanha: amanha, nome: result.label, gps: true });
+        } catch(e) {
+          console.warn('[GEO] erro no handler:', e);
+          resolve(getFallback());
+        }
+      },
+      (err) => {
+        console.warn('[GEO] GPS negado/timeout:', err.message);
+        resolve(getFallback());
+      },
+      { timeout: 10000, maximumAge: 300000 }
+    );
+  });
+}
+
+function updateBigGauge(rcm, dateStr) {
+  const lv = LEVELS[rcm] || LEVELS[2];
+  const gl = document.getElementById('gauge-level');
+  const gd = document.getElementById('gauge-date');
+  if (gl) { gl.textContent = lv.label; gl.setAttribute('fill', lv.color); }
+  if (gd) gd.textContent = fmtHero(dateStr);
+  const needle = document.querySelector('.big-gauge-wrap svg line');
+  if (needle) {
+    const n = needleXY(lv.needleAngle, 140, 140, 78);
+    needle.setAttribute('x2', n.x);
+    needle.setAttribute('y2', n.y);
+  }
+}
+
+function updateDaysGrid(rcmHoje, rcmAmanha, dateHoje, dateAmanha) {
+  const grid = document.getElementById('days-grid');
+  if (!grid) return;
+  const forecasts = [
+    { date: dateHoje,   rcm: rcmHoje   },
+    { date: dateAmanha, rcm: rcmAmanha },
+  ];
+  grid.innerHTML = forecasts.map(f => {
+    const lv = LEVELS[f.rcm] || LEVELS[2];
+    return `<div class="day-card">
+      <div class="day-name">${fmtCard(f.date)}</div>
+      ${miniSVG(f.rcm)}
+      <div class="day-level" style="color:${lv.color}">${lv.label}</div>
+    </div>`;
+  }).join('');
+}
+
+function updateRules(rcm) {
+  const lv = LEVELS[rcm] || LEVELS[2];
+  const r  = RULES[rcm]  || RULES[2];
+  const lbl = document.getElementById('cond-label');
+  const rg  = document.getElementById('rules-grid');
+  if (lbl) lbl.textContent = `Condicionantes em nível ${lv.label.toLowerCase()}`;
+  if (rg) rg.innerHTML = `
+    <div class="rule-card no"><div class="rule-head r">🔴 Proibido</div><ul class="rule-list">${r.proibido.map(i=>`<li>${i}</li>`).join('')}</ul></div>
+    <div class="rule-card ok"><div class="rule-head g">🟢 Permitido</div><ul class="rule-list">${r.permitido.map(i=>`<li>${i}</li>`).join('')}</ul></div>`;
+}
+
+function updateLocation(name) {
+  const tag = document.getElementById('hero-tag');
+  if (tag) tag.innerHTML = name;
+}
+
+// Fetch IPMA com múltiplos proxies
+async function fetchIPMA(day) {
+  const target = `https://api.ipma.pt/open-data/forecast/meteorology/rcm/rcm-d${day}.json`;
+  const proxies = [
+    target,
+    `https://corsproxy.io/?url=${encodeURIComponent(target)}`,
+    `https://api.allorigins.win/raw?url=${encodeURIComponent(target)}`,
+  ];
+  for (const url of proxies) {
+    try {
+      const r = await fetch(url, { cache: 'no-cache' });
+      if (r.ok) { const j = await r.json(); if (j && j.local) return j; }
+    } catch(e) {}
+  }
+  throw new Error('IPMA indisponível');
+}
+
+function showLoading() {
+  const lo = document.getElementById('loading-overlay');
+  const eo = document.getElementById('error-overlay');
+  if (lo) { lo.classList.remove('hidden'); }
+  if (eo) eo.classList.remove('visible');
+}
+function hideLoading() {
+  const lo = document.getElementById('loading-overlay');
+  if (lo) {
+    lo.classList.add('hidden');
+    setTimeout(() => { lo.style.display = 'none'; }, 500);
+  }
+}
+function showError() {
+  hideLoading();
+  const eo = document.getElementById('error-overlay');
+  if (eo) eo.classList.add('visible');
+}
+function retryLoad() {
+  const lo = document.getElementById('loading-overlay');
+  if (lo) { lo.style.display = ''; lo.classList.remove('hidden'); }
+  const eo = document.getElementById('error-overlay');
+  if (eo) eo.classList.remove('visible');
+  loadLiveData();
+}
+
+// ── MAIN ──
+async function loadLiveData() {
+  showLoading();
+  const hoje = todayStr();
+
+  try {
+    const [d0, d1] = await Promise.all([fetchIPMA(0), fetchIPMA(1)]);
+    gAllLocal = d0.local;
+
+    // Timestamp
+    const fd = d0.fileDate || '';
+    let tsStr = 'AO VIVO · IPMA';
+    if (fd) {
+      const ts = new Date(fd.replace(' ','T'));
+      if (!isNaN(ts)) tsStr = `ATUALIZADO ${String(ts.getDate()).padStart(2,'0')} ${MESES_C[ts.getMonth()].toUpperCase()} ${ts.getFullYear()}`;
+    }
+
+    // Aguarda GPS + geocoding — só depois revela tudo de uma vez
+    const { rcmHoje, rcmAmanha, dateAmanha, nome, gps } = await requestLocation(d0, d1);
+
+    if (nome) updateLocation(nome);
+    else if (!gps) updateLocation('A aguardar localização GPS…');
+
+    const el = document.getElementById('live-ts');
+    if (el) el.textContent = tsStr + (gps ? ' · GPS ✓' : ' · SEM GPS');
+
+    // Se rcm for null (sem localização), mostra nível 0 (sem dados)
+    const rcmFinal = rcmHoje ?? 0;
+    const rcmAmanhaFinal = rcmAmanha ?? 0;
+
+    updateBigGauge(rcmFinal, hoje);
+    updateDaysGrid(rcmFinal, rcmAmanhaFinal, hoje, dateAmanha);
+    updateRules(rcmFinal);
+    hideLoading();
+
+  } catch (err) {
+    showError();
+    const el = document.getElementById('live-ts');
+    if (el) el.textContent = `${String(new Date().getDate()).padStart(2,'0')} ${MESES_C[new Date().getMonth()].toUpperCase()} ${new Date().getFullYear()}`;
+  }
+}
+
+window.addEventListener('DOMContentLoaded', loadLiveData);
+window._refreshInterval = setInterval(loadLiveData, 30 * 60 * 1000);
+</script>
+
+</body>
+</HTML>
