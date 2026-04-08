@@ -494,24 +494,9 @@ setInterval(loadData,30*60*1000);</script>
 // ── District Dropdown ──
 (function(){
   const DISTRICTS = [
-    {name:'Aveiro',     file:'aveiro.html'},
-    {name:'Beja',       file:'beja.html'},
-    {name:'Braga',      file:'braga.html'},
-    {name:'Bragança',   file:'braganca.html'},
-    {name:'Castelo Branco',file:'castelo-branco.html'},
-    {name:'Coimbra',    file:'coimbra.html'},
-    {name:'Évora',      file:'evora.html'},
-    {name:'Faro',       file:'faro.html'},
-    {name:'Guarda',     file:'guarda.html'},
-    {name:'Leiria',     file:'leiria.html'},
-    {name:'Lisboa',     file:'lisboa.html'},
-    {name:'Portalegre', file:'portalegre.html'},
-    {name:'Porto',      file:'porto.html'},
-    {name:'Santarém',   file:'santarem.html'},
-    {name:'Setúbal',    file:'setubal.html'},
-    {name:'Viana do Castelo',file:'viana-do-castelo.html'},
-    {name:'Vila Real',  file:'vila-real.html'},
-    {name:'Viseu',      file:'viseu.html'},
+    {name:'Aveiro',     file:'https://fogos-pt.github.io/aveiro'},
+    {name:'Porto',      file:'https://fogos-pt.github.io/porto'},
+    {name:'Viseu',      file:'https://fogos-pt.github.io/viseu'},
   ];
 
   const current = document.querySelector('.page-title .fire')?.textContent?.trim()?.toUpperCase() || '';
