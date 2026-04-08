@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>404 — Página Não Encontrada · FOGOS-PT</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<link rel="icon" type="image/x-icon" href="https://res.cloudinary.com/deaee7sf6/image/upload/v1774902131/Polish_20260330_211530162_j9eymv.ico">
+<style>
+:root{--red:#e63946;--bg:#0a0a0c;--surface:#111115;--surface2:#1a1a20;--border:#2e2e38;--text:#f5f0e8;--muted:#a8a4b0;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-serif;min-height:100vh;overflow-x:hidden;display:flex;flex-direction:column;}
+body::before{content:'';position:fixed;bottom:0;left:0;right:0;height:320px;background:linear-gradient(to top,rgba(180,40,0,.12),transparent);pointer-events:none;z-index:0;animation:ambglow 5s ease-in-out infinite alternate;}
+@keyframes ambglow{from{opacity:.4}to{opacity:1}}
+
+header{position:sticky;top:0;z-index:100;border-bottom:1px solid var(--border);padding:0 32px;display:flex;align-items:center;justify-content:space-between;height:60px;background:rgba(10,10,12,.97);backdrop-filter:blur(12px);}
+.logo{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--text);}
+.logo-tri{width:28px;height:28px;flex-shrink:0;background:var(--red);clip-path:polygon(50% 0%,0% 100%,100% 100%);animation:ptri 2.2s ease-in-out infinite;}
+@keyframes ptri{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.65;transform:scale(.93)}}
+.logo-text{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;}
+.logo-text span{color:var(--red);}
+.back-link{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .2s;}
+.back-link:hover{color:var(--text);}
+
+main{flex:1;position:relative;z-index:5;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 32px;text-align:center;}
+
+/* 404 big number — stroke outline so it pops on dark */
+.err-code{font-family:'Bebas Neue',sans-serif;font-size:clamp(140px,22vw,260px);line-height:1;letter-spacing:-4px;color:transparent;-webkit-text-stroke:2px var(--red);position:relative;margin-bottom:8px;animation:codein .6s ease both;}
+@keyframes codein{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+
+/* floating triangles layered ON TOP of the number via z-index */
+.err-code-wrap{position:relative;display:inline-flex;align-items:center;justify-content:center;}
+.tri-layer{position:absolute;inset:0;pointer-events:none;z-index:2;}
+.tri{position:absolute;clip-path:polygon(50% 0%,0% 100%,100% 100%);background:var(--red);}
+.tri-1{width:52px;height:52px;top:10%;left:50%;transform:translateX(-50%);animation:drift1 4s ease-in-out infinite;opacity:.85;}
+.tri-2{width:30px;height:30px;top:30%;left:8%;animation:drift2 5.5s ease-in-out infinite;opacity:.5;}
+.tri-3{width:18px;height:18px;top:20%;right:8%;animation:drift3 3.8s ease-in-out infinite;opacity:.4;}
+.tri-4{width:14px;height:14px;bottom:15%;left:20%;animation:drift2 6s ease-in-out infinite reverse;opacity:.3;}
+@keyframes drift1{0%,100%{transform:translateX(-50%) translateY(0) rotate(0deg)}50%{transform:translateX(-50%) translateY(-18px) rotate(8deg)}}
+@keyframes drift2{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(12px) rotate(10deg)}}
+@keyframes drift3{0%,100%{transform:translateY(0) rotate(12deg)}50%{transform:translateY(-10px) rotate(-8deg)}}
+
+.err-tag{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--red);margin-bottom:12px;display:flex;align-items:center;justify-content:center;gap:8px;}
+.err-tag::before,.err-tag::after{content:'';display:inline-block;width:20px;height:1px;background:var(--red);}
+.err-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(28px,5vw,52px);letter-spacing:1px;line-height:1;margin-bottom:14px;}
+.err-title span{color:var(--red);}
+.err-sub{font-size:13px;color:#c8c2d4;font-weight:300;line-height:1.9;max-width:400px;margin:0 auto 36px;}
+
+.btn-primary{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--bg);background:var(--red);border:1px solid var(--red);padding:12px 32px;text-decoration:none;transition:background .2s,color .2s;}
+.btn-primary:hover{background:transparent;color:var(--red);}
+
+.districts-hint{margin-top:56px;width:100%;max-width:560px;}
+.hint-label{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#5e5a6e;margin-bottom:12px;display:flex;align-items:center;gap:10px;}
+.hint-label::before,.hint-label::after{content:'';flex:1;height:1px;background:var(--border);}
+.districts-grid{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;}
+.d-chip{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);border:1px solid var(--border);padding:5px 10px;text-decoration:none;transition:color .15s,border-color .15s,background .15s;}
+.d-chip:hover{color:var(--text);border-color:#5e5a6e;background:var(--surface2);}
+
+footer{position:relative;z-index:5;border-top:1px solid var(--border);padding:20px 32px;text-align:center;background:var(--surface);}
+.foot-txt{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:1.5px;color:#5e5a6e;text-transform:uppercase;}
+
+@media(max-width:600px){header{padding-left:16px;padding-right:16px;}main{padding:40px 16px;}}
+</style>
+</head>
+<body>
+
+<header>
+  <a class="logo" href="index.html">
+    <div class="logo-tri"></div>
+    <div class="logo-text">FOGOS<span>-</span>PT</div>
+  </a>
+  <a class="back-link" href="index.html">&#8592; Voltar ao Início</a>
+</header>
+
+<main>
+  <div class="err-code-wrap">
+    <div class="err-code">404</div>
+    <div class="tri-layer">
+      <div class="tri tri-1"></div>
+      <div class="tri tri-2"></div>
+      <div class="tri tri-3"></div>
+      <div class="tri tri-4"></div>
+    </div>
+  </div>
+
+  <div class="err-tag">Erro · Página Não Encontrada</div>
+  <h1 class="err-title">PERDESTE-TE<br>NO <span>MATO?</span></h1>
+  <p class="err-sub">Esta página não existe ou foi movida.<br>Utiliza o link abaixo para regressar ao início.</p>
+
+  <a class="btn-primary" href="index.html">&#8592; Página Inicial</a>
+
+  <div class="districts-hint">
+    <div class="hint-label">Ou escolhe um distrito</div>
+    <div class="districts-grid">
+      <a class="d-chip" href="aveiro.html">Aveiro</a>
+      <a class="d-chip" href="beja.html">Beja</a>
+      <a class="d-chip" href="braga.html">Braga</a>
+      <a class="d-chip" href="braganca.html">Bragança</a>
+      <a class="d-chip" href="castelo-branco.html">Castelo Branco</a>
+      <a class="d-chip" href="coimbra.html">Coimbra</a>
+      <a class="d-chip" href="evora.html">Évora</a>
+      <a class="d-chip" href="faro.html">Faro</a>
+      <a class="d-chip" href="guarda.html">Guarda</a>
+      <a class="d-chip" href="leiria.html">Leiria</a>
+      <a class="d-chip" href="lisboa.html">Lisboa</a>
+      <a class="d-chip" href="portalegre.html">Portalegre</a>
+      <a class="d-chip" href="porto.html">Porto</a>
+      <a class="d-chip" href="santarem.html">Santarém</a>
+      <a class="d-chip" href="setubal.html">Setúbal</a>
+      <a class="d-chip" href="viana-do-castelo.html">Viana do Castelo</a>
+      <a class="d-chip" href="vila-real.html">Vila Real</a>
+      <a class="d-chip" href="viseu.html">Viseu</a>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="foot-txt">FOGOS-PT &mdash; Risco de Incêndio Rural &mdash; Dados IPMA / ICNF</div>
+</footer>
+
+</body>
+</html>
