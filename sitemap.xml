@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
-  <!-- Main Page -->
   <url>
     <loc>https://incendios-pt.github.io/</loc>
     <lastmod>2026-04-09</lastmod>
@@ -9,25 +8,22 @@
     <priority>1.0</priority>
   </url>
 
-  <!-- Aveiro -->
   <url>
-    <loc>https://incendios-pt.github.io/aveiro</loc>
+    <loc>https://incendios-pt.github.io/aveiro/index.html</loc>
     <lastmod>2026-04-09</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
 
-  <!-- Porto -->
   <url>
-    <loc>https://incendios-pt.github.io/porto</loc>
+    <loc>https://incendios-pt.github.io/porto/index.html</loc>
     <lastmod>2026-04-09</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
 
-  <!-- Viseu -->
   <url>
-    <loc>https://incendios-pt.github.io/viseu</loc>
+    <loc>https://incendios-pt.github.io/viseu/index.html</loc>
     <lastmod>2026-04-09</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
