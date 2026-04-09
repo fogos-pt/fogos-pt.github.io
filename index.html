@@ -1715,6 +1715,55 @@ document.addEventListener('click', function(e) {
 window.addEventListener('DOMContentLoaded', loadLiveData);
 window._refreshInterval = setInterval(loadLiveData, 30 * 60 * 1000);
 </script>
+  <script>
+    // ── District Dropdown ──
+(function(){
+  const DISTRICTS = [
+    {name:'Aveiro',     file:'https://fogos-pt.github.io/aveiro'},
+    {name:'Porto',      file:'https://fogos-pt.github.io/porto'},
+    {name:'Viseu',      file:'https://fogos-pt.github.io/viseu'},
+  ];
+
+  const current = document.querySelector('.page-title .fire')?.textContent?.trim()?.toUpperCase() || '';
+
+  const trigger = document.getElementById('dd-trigger');
+  const menu = document.getElementById('dd-menu');
+  if(!trigger||!menu) return;
+
+  // build menu items
+  const section = document.createElement('div');
+  section.className='dd-section-title';
+  section.textContent='Selecionar Distrito';
+  menu.appendChild(section);
+
+  DISTRICTS.forEach(d=>{
+    const isActive = d.name.toUpperCase().includes(current) || current.includes(d.name.toUpperCase());
+    const a = document.createElement('a');
+    a.className='dd-item'+(isActive?' active':'');
+    a.href = d.file;
+    a.innerHTML=`<span>${d.name}</span><span class="dd-tag">DIST</span>`;
+    menu.appendChild(a);
+  });
+
+  // set current label
+  const cur=document.getElementById('dd-current');
+  if(cur && current){
+    const match=DISTRICTS.find(d=>d.name.toUpperCase().includes(current)||current.includes(d.name.split(' ')[0].toUpperCase()));
+    if(match) cur.textContent=match.name.toUpperCase();
+  }
+
+  trigger.addEventListener('click',e=>{
+    e.stopPropagation();
+    const open=menu.classList.toggle('open');
+    trigger.classList.toggle('open',open);
+  });
+  document.addEventListener('click',()=>{
+    menu.classList.remove('open');
+    trigger.classList.remove('open');
+  });
+  menu.addEventListener('click',e=>e.stopPropagation());
+})();
+  </script>
 
 </body>
 </HTML>
